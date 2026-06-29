@@ -1,0 +1,13 @@
+//
+// Created by leon on 29/06/2026.
+//
+
+#ifndef CONTROLADOR_DE_VIAGENS_TRANSPORTE_H
+#define CONTROLADOR_DE_VIAGENS_TRANSPORTE_H
+
+
+class Transporte {
+};
+
+
+#endif //CONTROLADOR_DE_VIAGENS_TRANSPORTE_H
