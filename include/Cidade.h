@@ -4,9 +4,14 @@
 
 #ifndef CONTROLADOR_DE_VIAGENS_CIDADE_H
 #define CONTROLADOR_DE_VIAGENS_CIDADE_H
-
+#include <string>
 
 class Cidade {
+private:
+    std::string nome;
+public:
+    Cidade(std::string nome);
+    std::string getNome();
 };
 
 
