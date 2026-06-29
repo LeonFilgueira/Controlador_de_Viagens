@@ -19,7 +19,7 @@ private:
     Cidade* localAtual;
 public:
     Transporte(const std::string nome, char tipo, int capacidade, int velocidade, int distancia_entre_descansos,
-        int tempo_de_descanso, int tempo_de_descanso_atual, Cidade *local_atual);
+        int tempo_de_descanso, Cidade* local_atual);
     std::string getNome();
     char getTipo();
     int getCapacidade();
