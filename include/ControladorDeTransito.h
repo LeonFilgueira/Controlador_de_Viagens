@@ -29,6 +29,9 @@ public:
     void cadastrarPassageiro(std::string nome, std::string localAtual);
     void iniciarViagem(std::string nomeTransporte, std::vector<std::string> nomesPassageiros, std::string nomeOrigem, std::string nomeDestino);
     void avancarHoras(int horas);
+    void imprimirCidades();
+    void imprimirPassageiros();
+    void imprimirTrajetos();
     void relatarEstado();
 };
 

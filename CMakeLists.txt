@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 3.20)
 project(Controlador_de_Viagens)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -15,4 +15,8 @@ add_executable(Controlador_de_Viagens src/main.cpp
         src/Viagem.cpp
         include/Viagem.h
         src/ControladorDeTransito.cpp
-        include/ControladorDeTransito.h)
+        include/ControladorDeTransito.h
+        src/Interface.cpp
+        include/Interface.h
+)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
