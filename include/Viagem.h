@@ -8,19 +8,26 @@
 #include <vector>
 #include "Cidade.h"
 #include "Passageiro.h"
+#include "Trajeto.h"
 #include "Transporte.h"
 
 class Viagem {
 private:
     Transporte* transporte;
     std::vector<Passageiro*> passageiros;
+    std::vector<Trajeto*> trajetosRota;
     Cidade* origem;
     Cidade* destino;
-    Viagem* proxima;
     int horasEmTransito;
+    int horasDescansando;
+    int kmDesdeDescanso;
+    int trajetoAtual;
     bool emAndamento;
+    bool emDescanso;
+
+
 public:
-    Viagem(Transporte *transporte, const std::vector<Passageiro *> passageiros, Cidade *origem, Cidade *destino);
+    Viagem(Transporte *transporte, std::vector<Passageiro *> passageiros, std::vector<Trajeto*> trajetosRota);
     void iniciarViagem();
     void avancarHoras(int horas);
     void relatarEstado();

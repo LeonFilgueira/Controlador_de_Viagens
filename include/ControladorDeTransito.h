@@ -9,7 +9,6 @@
 #include "Cidade.h"
 #include "Passageiro.h"
 #include "Transporte.h"
-#include "Trajeto.h"
 #include "Viagem.h"
 
 class ControladorDeTransito {
@@ -23,6 +22,7 @@ public:
     Cidade* buscarCidade(std::string nome);
     Transporte* buscarTransporte(std::string nome);
     Passageiro* buscarPassageiro(std::string nome);
+    std::vector<Trajeto*> calculcarMelhorRota(std::string nomeOrigem,std::string nomeDestino, char tipo);
     void cadastrarCidade(std::string nome);
     void cadastrarTrajeto(std::string nomeOrigem, std::string nomeDestino, char tipo, int distancia);
     void cadastrarTransporte(std::string nome, char tipo, int capacidade, int velocidade, int distancia_entre_descansos, int tempo_de_descanso, std::string localAtual);

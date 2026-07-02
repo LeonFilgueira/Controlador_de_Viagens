@@ -4,7 +4,81 @@
 
 #include "../include/ControladorDeTransito.h"
 #include <iostream>
+#include <map>
+#include <queue>
+#include <algorithm>
+#include <climits>
+
 using namespace std;
+
+//Algoritmo de Djikstra pra encontrar a melhor rota
+vector<Trajeto *> ControladorDeTransito::calculcarMelhorRota(std::string nomeOrigem, std::string nomeDestino,
+                                                             char tipo) {
+    Cidade* origem = buscarCidade(nomeOrigem);
+    Cidade* destino = buscarCidade(nomeDestino);
+
+    if (!origem || !destino) return {};
+
+    std::map<Cidade*, int> distancias;
+
+    std::map<Cidade*, Trajeto*> trajetoAnterior;
+
+    for (Cidade* cidade : cidades) {
+        distancias[cidade] = INT_MAX;
+        trajetoAnterior[cidade] = nullptr;
+    }
+    distancias[origem] = 0;
+
+    priority_queue<std::pair<int, Cidade*>,
+                        std::vector<std::pair<int, Cidade*>>,
+                        std::greater<std::pair<int, Cidade*>>> fila;
+
+    fila.push({0, origem});
+
+    while (!fila.empty()) {
+        Cidade* u = fila.top().second;
+        int dist_u = fila.top().first;
+        fila.pop();
+
+        if (dist_u > distancias[u]) continue;
+        if (u == destino) break;
+
+        for (Trajeto* trajeto : trajetos) {
+
+            if (trajeto->getOrigem() == u && trajeto->getTipo() == tipo) {
+                Cidade* v = trajeto->getDestino();
+                int peso = trajeto->getDistancia();
+
+                if (distancias[u] != INT_MAX && distancias[u] + peso < distancias[v]) {
+                    distancias[v] = distancias[u] + peso;
+                    trajetoAnterior[v] = trajeto;
+                    fila.push({distancias[v], v});
+                }
+            }
+        }
+    }
+
+    if (distancias[destino] == INT_MAX) {
+        cout << "Nao ha rota disponivel entre " << nomeOrigem << " e " << nomeDestino << " para o tipo " << tipo << endl;
+        return {};
+    }
+
+    vector<Trajeto*> rotaDeTrajetos;
+    Cidade* atual = destino;
+
+    while (atual != origem) {
+        Trajeto* t = trajetoAnterior[atual];
+        if (!t) break;
+
+        rotaDeTrajetos.push_back(t);
+        atual = t->getOrigem();
+    }
+
+    std::reverse(rotaDeTrajetos.begin(), rotaDeTrajetos.end());
+
+    return rotaDeTrajetos;
+
+}
 
 Cidade *ControladorDeTransito::buscarCidade(std::string nome) {
     for (Cidade *cidade: cidades) {
@@ -51,8 +125,8 @@ void ControladorDeTransito::cadastrarCidade(std::string nome) {
     cout << "O nome da cidade não pode estar vazio";
 }
 
-void ControladorDeTransito::
-cadastrarTrajeto(std::string nomeOrigem, std::string nomeDestino, char tipo, int distancia) {
+void ControladorDeTransito::cadastrarTrajeto(std::string nomeOrigem, std::string nomeDestino, char tipo,
+                                             int distancia) {
     Cidade *origem = buscarCidade(nomeOrigem);
     Cidade *destino = buscarCidade(nomeDestino);
     if (origem && destino) {
@@ -93,14 +167,23 @@ void ControladorDeTransito::iniciarViagem(std::string nomeTransporte, std::vecto
     vector<Passageiro *> passageirosViagem;
 
     for (string nome: nomesPassageiros) {
-        Passageiro *passageiro = buscarPassageiro(nome);
-        if (passageiro) {
-            passageirosViagem.push_back(passageiro);
+        Passageiro *p = buscarPassageiro(nome);
+        if (p) {
+            passageirosViagem.push_back(p);
         }
     }
 
-    if (origem && destino) {
-        this->viagens.push_back(new Viagem(transporte, passageirosViagem, origem, destino));
+    if (origem && destino && transporte && transporte->getLocalAtual() == origem) {
+        vector<Trajeto*> rotaCalculada = calculcarMelhorRota(nomeOrigem, nomeDestino, transporte->getTipo());
+        if (!rotaCalculada.empty()) {
+            Viagem* novaViagem = new Viagem(transporte,passageirosViagem,rotaCalculada);
+            novaViagem->iniciarViagem();
+            this->viagens.push_back(novaViagem);
+        }else {
+            cout << "Não foi possível iniciar a viagem, não existe uma rota para o percurso desejado" << endl;
+        }
+    } else {
+        cout << "Não foi possível inciar a viagem" << endl;
     }
 }
 

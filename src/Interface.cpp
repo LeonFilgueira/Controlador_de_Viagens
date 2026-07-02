@@ -16,6 +16,7 @@ void Interface::iniciar() {
         cout << "=== Gestão de Viagens ===\n" << endl;
         cout << "1) Cadastros" << endl;
         cout << "2) Consultas e Relatórios" << endl;
+        cout << "3) Iniciar Viagem " << endl;
         cout << "\n0) Encerrar Programa" << endl;
         cin >> entrada;
         switch (entrada) {
@@ -24,6 +25,9 @@ void Interface::iniciar() {
                 break;
             case '2':
                 consultas();
+                break;
+            case '3':
+                gerenciarViagens();
                 break;
             default:
                 break;
@@ -63,9 +67,52 @@ void Interface::cadastros() {
 }
 
 void Interface::consultas() {
+    char entrada;
+    do {
+        empurrarTexto();
+        cout << "=== Página de Consultas e Relatórios ===\n" << endl;
+        cout << "1) Localizar pessoa" << endl;
+        cout << "2) Localizar transporte" << endl;
+        cout << "3) Listar viagens em andamento" << endl;
+        cout << "4) Listar cidades mais visitadas" << endl;
+        cout << "\n0) Voltar para menu inicial" << endl;
+        cin >> entrada;
+
+        switch (entrada) {
+            case '1':
+                cadastroCidade();
+                break;
+            case '2':
+                cadastroTrajeto();
+                break;
+            case '3':
+                cadastroTransporte();
+                break;
+            case '4':
+                cadastroPassageiro();
+                break;
+            default:
+                break;
+        }
+    } while (entrada != '0');
+
 }
 
 void Interface::gerenciarViagens() {
+    char entrada;
+    cout << "== Iniciar Viagem ==\n" << endl;
+    do {
+        string origem;
+        string destino;
+        cout << "Digite o nome da cidade de origem: " << endl;
+        getline(cin >> ws, origem);
+        cout << "Digite o nome da cidade de destino: " << endl;
+        getline(cin >> ws, destino);
+
+        cout << "Deseja continuar o cadastro ? (1 - Sim | 0 - Não): " << endl;
+        cin >> entrada;
+    } while (entrada != '0');
+
 }
 
 void Interface::cadastroCidade() {
