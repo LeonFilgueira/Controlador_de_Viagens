@@ -91,7 +91,7 @@ void Interface::consultas() {
                 viagensEmAndamento();
                 break;
             case '5':
-                maisVisitadas();
+                maisVisitadas(); 
                 break;
             default:
                 break;

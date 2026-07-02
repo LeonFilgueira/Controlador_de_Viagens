@@ -1,3 +1,4 @@
-Natal;3
+Natal;4
 Fortaleza;2
 Pernambuco;1
+Maceió;1

@@ -1,2 +1,2 @@
 Carro;T;4;50;500;1;Fortaleza
-Moto;T;2;60;150;1;Pernambuco
+Moto;T;2;60;150;1;Natal

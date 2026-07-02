@@ -82,16 +82,18 @@ vector<Trajeto *> ControladorDeTransito::calculcarMelhorRota(std::string nomeOri
     return rotaDeTrajetos;
 }
 
+
+//Função para buscar uma cidade pelo nome
 Cidade *ControladorDeTransito::buscarCidade(std::string nome) {
     for (Cidade *cidade: cidades) {
         if (cidade->getNome() == nome) {
             return cidade;
         }
     }
-    cout << "Não existe uma cidade cadastrada com o nome " << nome << endl;
     return nullptr;
 }
 
+//Função para buscar um transporte pelo nome
 Transporte *ControladorDeTransito::buscarTransporte(std::string nome) {
     for (Transporte *transporte: transportes) {
         if (transporte->getNome() == nome) {
@@ -102,6 +104,7 @@ Transporte *ControladorDeTransito::buscarTransporte(std::string nome) {
     return nullptr;
 }
 
+//Função para buscar um passageiro pelo nome
 Passageiro *ControladorDeTransito::buscarPassageiro(std::string nome) {
     for (Passageiro *passageiro: passageiros) {
         if (passageiro->getNome() == nome) {
@@ -112,6 +115,7 @@ Passageiro *ControladorDeTransito::buscarPassageiro(std::string nome) {
     return nullptr;
 }
 
+//Função de cadastro de nova cidade
 void ControladorDeTransito::cadastrarCidade(std::string nome) {
     if (!nome.empty()) {
         for (Cidade *cidade: cidades) {
@@ -120,6 +124,7 @@ void ControladorDeTransito::cadastrarCidade(std::string nome) {
                 return;
             }
         }
+        //se a cidade ainda não foi cadastrada e o nome não está vazio, cria uma nova cidade e salva no txt
         Cidade *novaCidade = new Cidade(nome);
         this->cidades.push_back(novaCidade);
         salvarCidades();
@@ -128,10 +133,13 @@ void ControladorDeTransito::cadastrarCidade(std::string nome) {
     cout << "O nome da cidade não pode estar vazio" << endl;
 }
 
+//Função de cadastro de novo trajeto
 void ControladorDeTransito::cadastrarTrajeto(std::string nomeOrigem, std::string nomeDestino, char tipo,
                                              int distancia) {
     Cidade *origem = buscarCidade(nomeOrigem);
     Cidade *destino = buscarCidade(nomeDestino);
+
+    //se ambos a cidadade e o destino existirem, cria o trajeto e salva no txt
     if (origem && destino) {
         this->trajetos.push_back(new Trajeto(origem, destino, tipo, distancia));
         cout << "Trajeto " << nomeOrigem << "->" << nomeDestino << " cadastrado com sucesso" << endl;
@@ -141,10 +149,12 @@ void ControladorDeTransito::cadastrarTrajeto(std::string nomeOrigem, std::string
     }
 }
 
+//função de cadastro de novo transporte
 void ControladorDeTransito::cadastrarTransporte(std::string nome, char tipo, int capacidade, int velocidade,
                                                 int distancia_entre_descansos, int tempo_de_descanso,
                                                 std::string localAtual) {
     Cidade *local = buscarCidade(localAtual);
+    //se o local existe, cria o transporte naquele local
     if (local) {
         this->transportes.push_back(new Transporte(nome, tipo, capacidade, velocidade, distancia_entre_descansos,
                                                    tempo_de_descanso, local));
@@ -155,8 +165,18 @@ void ControladorDeTransito::cadastrarTransporte(std::string nome, char tipo, int
     }
 }
 
+//função de cadastro de novo passageiro
 void ControladorDeTransito::cadastrarPassageiro(std::string nome, std::string localAtual) {
     Cidade *local = buscarCidade(localAtual);
+    //não permite que o mesmo passageiro seja registrado mais de uma vez
+    for (Passageiro* passageiro: passageiros) {
+        if (passageiro->getNome() == nome) {
+            cout << "Esse passageiro já foi cadastrado"<<endl;
+            return;
+        }
+    }
+
+    //se o local existir e o passageiro ainda não, cria o passageiro e salva no txt
     if (local) {
         this->passageiros.push_back(new Passageiro(nome, local));
         salvarPassageiros();
@@ -165,6 +185,7 @@ void ControladorDeTransito::cadastrarPassageiro(std::string nome, std::string lo
     }
 }
 
+//Função de criar viagem
 void ControladorDeTransito::iniciarViagem(std::string nomeTransporte, std::vector<std::string> nomesPassageiros,
                                           std::string nomeOrigem, std::string nomeDestino) {
     Cidade *origem = buscarCidade(nomeOrigem);
@@ -172,6 +193,7 @@ void ControladorDeTransito::iniciarViagem(std::string nomeTransporte, std::vecto
     Transporte *transporte = buscarTransporte(nomeTransporte);
     vector<Passageiro *> passageirosViagem;
 
+    //Valida os passageiros e adiciona somente os válidos
     for (string nome: nomesPassageiros) {
         Passageiro *p = buscarPassageiro(nome);
         if (p) {
@@ -179,6 +201,7 @@ void ControladorDeTransito::iniciarViagem(std::string nomeTransporte, std::vecto
         }
     }
 
+    //testa se existem origem, destino, transporte, e se o transporte e os passageiros estão no ponto de partida
     if (origem && destino && transporte && transporte->getLocalAtual() == origem && passageirosViagem.size() <=
         transporte->getCapacidade()) {
         for (Passageiro *passageiros: passageirosViagem) {
@@ -187,8 +210,10 @@ void ControladorDeTransito::iniciarViagem(std::string nomeTransporte, std::vecto
                 return;
             }
         }
+        //chama a função do algoritmo dijkstra pra calcular a melhor rota
         vector<Trajeto *> rotaIdeal = calculcarMelhorRota(nomeOrigem, nomeDestino, transporte->getTipo());
         if (!rotaIdeal.empty()) {
+            //se a rota for possível, cria a viagem em andamento e salva no txt
             Viagem *novaViagem = new Viagem(transporte, passageirosViagem, rotaIdeal);
             novaViagem->iniciarViagem();
             this->viagens.push_back(novaViagem);
@@ -206,6 +231,7 @@ void ControladorDeTransito::avancarHoras(int horas) {
     for (Viagem *viagem: viagens) {
         viagem->avancarHoras(horas);
     }
+    //após avançar a hora salva tudo que foi modificado
     salvarViagens();
     salvarCidades();
     salvarPassageiros();
@@ -218,6 +244,7 @@ void ControladorDeTransito::relatarEstado() {
     }
 }
 
+//carrega os dados txt no programa
 void ControladorDeTransito::carregarDados() {
     carregarCidades();
     carregarTrajetos();

@@ -1,4 +1,4 @@
 João;Fortaleza
 Maria;Fortaleza
 Pedro;Natal
-Pablo;Pernambuco
+Pablo;Natal

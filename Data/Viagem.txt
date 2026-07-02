@@ -1,2 +1,3 @@
 Carro;Fortaleza;Pernambuco;6;0;2;João,Maria
 Moto;Natal;Pernambuco;4;0;1;Pablo
+Moto;Pernambuco;Natal;4;0;1;Pablo
