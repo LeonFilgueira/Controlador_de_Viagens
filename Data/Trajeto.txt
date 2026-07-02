@@ -1,0 +1,4 @@
+Fortaleza;Natal;T;100
+Natal;Pernambuco;T;200
+Fortaleza;Pernambuco;T;500
+Pernambuco;Natal;T;200

@@ -11,12 +11,12 @@ ControladorDeTransito controlador;
 
 void Interface::iniciar() {
     char entrada;
+    controlador.carregarDados();
     do {
-        empurrarTexto();
         cout << "=== Gestão de Viagens ===\n" << endl;
         cout << "1) Cadastros" << endl;
         cout << "2) Consultas e Relatórios" << endl;
-        cout << "3) Iniciar Viagem " << endl;
+        cout << "3) Gerenciar Viagens " << endl;
         cout << "\n0) Encerrar Programa" << endl;
         cin >> entrada;
         switch (entrada) {
@@ -38,7 +38,6 @@ void Interface::iniciar() {
 void Interface::cadastros() {
     char entrada;
     do {
-        empurrarTexto();
         cout << "=== Página de cadastros ===\n" << endl;
         cout << "1) Cadastrar Cidade" << endl;
         cout << "2) Cadastrar Trajeto" << endl;
@@ -69,27 +68,52 @@ void Interface::cadastros() {
 void Interface::consultas() {
     char entrada;
     do {
-        empurrarTexto();
         cout << "=== Página de Consultas e Relatórios ===\n" << endl;
-        cout << "1) Localizar pessoa" << endl;
+        cout << "1) Localizar passageiro" << endl;
         cout << "2) Localizar transporte" << endl;
-        cout << "3) Listar viagens em andamento" << endl;
-        cout << "4) Listar cidades mais visitadas" << endl;
+        cout << "3) Listar todas as viagens" << endl;
+        cout << "4) Listar viagens em andamento" << endl;
+        cout << "5) Listar cidades mais visitadas" << endl;
         cout << "\n0) Voltar para menu inicial" << endl;
         cin >> entrada;
 
         switch (entrada) {
             case '1':
-                cadastroCidade();
+                localizarPassageiro();
                 break;
             case '2':
-                cadastroTrajeto();
+                localizarTransporte();
                 break;
             case '3':
-                cadastroTransporte();
+                relatarEstado();
                 break;
             case '4':
-                cadastroPassageiro();
+                viagensEmAndamento();
+                break;
+            case '5':
+                maisVisitadas();
+                break;
+            default:
+                break;
+        }
+    } while (entrada != '0');
+}
+
+void Interface::gerenciarViagens() {
+    char entrada;
+    do {
+        cout << "=== Página Gerenciamento de Viagens ===\n" << endl;
+        cout << "1) Iniciar Viagem" << endl;
+        cout << "2) Avançar Horas" << endl;
+        cout << "\n0) Voltar para menu inicial" << endl;
+        cin >> entrada;
+
+        switch (entrada) {
+            case '1':
+                iniciarViagem();
+                break;
+            case '2':
+                avançarHoras();
                 break;
             default:
                 break;
@@ -98,22 +122,7 @@ void Interface::consultas() {
 
 }
 
-void Interface::gerenciarViagens() {
-    char entrada;
-    cout << "== Iniciar Viagem ==\n" << endl;
-    do {
-        string origem;
-        string destino;
-        cout << "Digite o nome da cidade de origem: " << endl;
-        getline(cin >> ws, origem);
-        cout << "Digite o nome da cidade de destino: " << endl;
-        getline(cin >> ws, destino);
 
-        cout << "Deseja continuar o cadastro ? (1 - Sim | 0 - Não): " << endl;
-        cin >> entrada;
-    } while (entrada != '0');
-
-}
 
 void Interface::cadastroCidade() {
     char entrada;
@@ -216,8 +225,69 @@ void Interface::cadastroPassageiro() {
     } while (entrada != '0');
 }
 
-void Interface::empurrarTexto() {
-    for (int i = 0; i < 10; i++) {
-        cout << "\n";
-    }
+
+void Interface::avançarHoras() {
+    int horas;
+    cout << "Digite a quantidade de horas que deseja avançar: " << endl;
+    cin >> horas;
+    controlador.avancarHoras(horas);
+    cout << horas << " horas foram avançadas" << endl;
+}
+
+void Interface::relatarEstado() {
+    controlador.relatarEstado();
+}
+
+void Interface::iniciarViagem() {
+    char entrada;
+    cout << "== Iniciar Viagem ==\n" << endl;
+    do {
+        string origem;
+        string destino;
+        string transporte;
+        vector<string> passageiros;
+
+
+        cout << "Digite o nome da cidade de origem: " << endl;
+        getline(cin >> ws, origem);
+        cout << "Digite o nome da cidade de destino: " << endl;
+        getline(cin >> ws, destino);
+        cout << "Digite o nome do transporte: " << endl;
+        getline(cin >> ws, transporte);
+        do {
+            string nome;
+            cout << "Digite o nome do passageiro: " << endl;
+            getline(cin >> ws, nome);
+            passageiros.push_back(nome);
+            cout << "Deseja adicionar outro passageiro? (1 - Sim | 0 - Não): " << endl;
+            cin >> entrada;
+        } while (entrada != '0');
+        controlador.iniciarViagem(transporte, passageiros, origem, destino);
+
+
+        cout << "Deseja continuar o cadastro? (1 - Sim | 0 - Não): " << endl;
+        cin >> entrada;
+    } while (entrada != '0');
+}
+
+void Interface::viagensEmAndamento() {
+    controlador.viagensEmAndamento();
+}
+
+void Interface::localizarPassageiro() {
+    string nome;
+    cout << "Digite o nome do passageiro: " << endl;
+    getline(cin >> ws, nome);
+    controlador.localizarPassageiro(nome);
+}
+
+void Interface::localizarTransporte() {
+    string nome;
+    cout << "Digite o nome do transporte: " << endl;
+    getline(cin >> ws, nome);
+    controlador.localizarTransporte(nome);
+}
+
+void Interface::maisVisitadas() {
+    controlador.maisVisitadas();
 }

@@ -9,9 +9,12 @@
 class Cidade {
 private:
     std::string nome;
+    int visitas;
 public:
     Cidade(std::string nome);
     std::string getNome();
+    int getVisitas();
+    void setVisitas(int v);
 };
 
 

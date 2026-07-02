@@ -8,7 +8,6 @@
 
 class Interface {
 public:
-    void empurrarTexto();
     void iniciar();
     void cadastros();
     void consultas();
@@ -17,6 +16,13 @@ public:
     void cadastroTrajeto();
     void cadastroTransporte();
     void cadastroPassageiro();
+    void avançarHoras();
+    void relatarEstado();
+    void iniciarViagem();
+    void viagensEmAndamento();
+    void localizarPassageiro();
+    void localizarTransporte();
+    void maisVisitadas();
 
 };
 

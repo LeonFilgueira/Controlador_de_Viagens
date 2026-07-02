@@ -1,0 +1,3 @@
+Natal;3
+Fortaleza;2
+Pernambuco;1

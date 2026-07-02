@@ -32,6 +32,17 @@ public:
     void avancarHoras(int horas);
     void relatarEstado();
     bool isEmAndamento();
+    Cidade* getOrigem();
+    Cidade* getDestino();
+    int getHorasEmTransito();
+    int getHorasDescansando();
+    int getKmDesdeDescanso();
+    int getTrajetoAtual();
+    void setTrajetoAtual(int trajetoAtual);
+    void setEmAndamento(bool emAndamento);
+    void setHorasEmTransito(int horasEmTransito);
+    Transporte* getTransporte();
+    std::vector<Passageiro*> getPassageiros();
 };
 
 
